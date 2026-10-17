@@ -3,20 +3,28 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#050505">
-  <meta name="description" content="Offensive Technology: ferramentas Android, Termux, engenharia reversa, Assembly e cibersegurança. Projetos open source e tutoriais.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#05070b">
+  <meta name="description" content="Offensive Technology — projetos open source, Termux, Android, Assembly e cibersegurança responsável.">
+  <meta name="keywords" content="Offensive Technology, Termux, Android, ReaDroid, AITRACE, Sysguard ASM, NetScope, cibersegurança">
+  <meta property="og:title" content="Offensive Technology | Android & Security">
+  <meta property="og:description" content="Ferramentas open source e tutoriais de Android, Termux e segurança digital.">
+  <meta property="og:type" content="website">
   <title>Offensive Technology | Android & Security</title>
 
   <style>
     :root {
-      --bg: #050505;
-      --panel: #0c0c0f;
+      color-scheme: dark;
+      --bg: #05070b;
+      --panel: #0b1019;
       --blue: #3984ff;
-      --blue-light: #80b2ff;
-      --text: #f4f6fb;
-      --muted: #9298a6;
-      --border: #20232c;
+      --blue2: #80b2ff;
+      --green: #78e0b0;
+      --text: #f3f6fc;
+      --muted: #98a4b8;
+      --border: #202b3b;
+      --radius: 16px;
+      --max: 1120px;
     }
 
     * {
@@ -27,13 +35,27 @@
 
     html {
       scroll-behavior: smooth;
+      scroll-padding-top: 90px;
     }
 
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: Arial, Helvetica, sans-serif;
-      line-height: 1.6;
+      font: 16px/1.65 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse at 50% -20%, rgba(57,132,255,.16), transparent 55%),
+        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+      background-size: auto, 38px 38px, 38px 38px;
     }
 
     a {
@@ -41,17 +63,21 @@
       text-decoration: none;
     }
 
-    .container {
-      width: min(1080px, 90%);
-      margin: auto;
+    .wrap {
+      width: min(var(--max), calc(100% - 40px));
+      margin-inline: auto;
     }
 
-    header {
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(5,7,11,.92);
+      backdrop-filter: blur(18px);
       border-bottom: 1px solid var(--border);
-      background: rgba(5, 5, 5, .96);
     }
 
-    nav {
+    .nav {
       min-height: 76px;
       display: flex;
       align-items: center;
@@ -59,80 +85,55 @@
       gap: 20px;
     }
 
-    .logo {
-      font-size: 17px;
-      font-weight: 800;
-      letter-spacing: -.5px;
-    }
-
-    .logo span,
-    .blue {
-      color: var(--blue);
-    }
-
-    .nav-links {
+    .brand {
       display: flex;
-      gap: 22px;
+      align-items: center;
+      gap: 10px;
       font-size: 13px;
-      color: #c3c7d1;
+      font-weight: 900;
+      letter-spacing: .08em;
     }
 
-    .nav-links a:hover,
-    .footer-links a:hover {
-      color: var(--blue-light);
+    .brandmark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border: 1px solid rgba(128,178,255,.4);
+      border-radius: 10px;
+      color: var(--blue2);
+      background: rgba(57,132,255,.1);
+      font-family: monospace;
     }
 
-    .hero {
-      padding: 100px 0 90px;
-      border-bottom: 1px solid var(--border);
-      background:
-        radial-gradient(ellipse at 50% 0%,
-        rgba(35, 94, 220, .13), transparent 65%);
+    .brand-name span {
+      color: var(--blue2);
     }
 
-    .eyebrow {
-      color: var(--blue-light);
-      font-size: 12px;
-      letter-spacing: 2px;
-      font-weight: bold;
-      margin-bottom: 22px;
-    }
-
-    h1 {
-      font-size: clamp(38px, 7vw, 66px);
-      line-height: 1.08;
-      letter-spacing: -2px;
-      max-width: 800px;
-      margin-bottom: 24px;
-    }
-
-    .hero p {
-      max-width: 610px;
-      color: var(--muted);
-      font-size: 16px;
-      margin-bottom: 30px;
-    }
-
-    .buttons {
+    .navlinks {
       display: flex;
-      gap: 12px;
       flex-wrap: wrap;
+      gap: 20px;
+      color: #c2ccdc;
+      font-size: 12px;
+    }
+
+    .navlinks a:hover,
+    .footlinks a:hover {
+      color: var(--blue2);
     }
 
     .btn {
-      display: inline-block;
-      padding: 12px 19px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 16px;
       border: 1px solid var(--border);
-      border-radius: 6px;
+      border-radius: 9px;
       font-size: 13px;
-      font-weight: bold;
+      font-weight: 750;
       transition: .2s;
-    }
-
-    .btn-primary {
-      background: var(--blue);
-      border-color: var(--blue);
-      color: white;
     }
 
     .btn:hover {
@@ -140,138 +141,449 @@
       border-color: var(--blue);
     }
 
-    section {
-      padding: 72px 0;
+    .btn-primary {
+      color: white;
+      background: var(--blue);
+      border-color: var(--blue);
+      box-shadow: 0 8px 28px rgba(57,132,255,.2);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,.025);
+    }
+
+    .hero {
+      padding: 90px 0;
       border-bottom: 1px solid var(--border);
     }
 
-    .section-label {
-      color: var(--blue);
-      font-size: 11px;
-      font-weight: bold;
-      letter-spacing: 2px;
-      margin-bottom: 8px;
-    }
-
-    h2 {
-      font-size: clamp(26px, 4vw, 34px);
-      letter-spacing: -.8px;
-      margin-bottom: 12px;
-    }
-
-    .section-desc {
-      color: var(--muted);
-      font-size: 14px;
-      margin-bottom: 30px;
-      max-width: 580px;
-    }
-
-    .grid {
+    .hero-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
+      grid-template-columns: 1.15fr .85fr;
+      align-items: center;
+      gap: 45px;
     }
 
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      padding: 25px;
-      border-radius: 9px;
-      transition: border-color .2s, transform .2s;
+    .eyebrow,
+    .section-kicker {
+      color: var(--blue2);
+      font: 800 11px/1.5 monospace;
+      letter-spacing: .17em;
+      text-transform: uppercase;
     }
 
-    .card:hover {
-      border-color: #315da8;
-      transform: translateY(-3px);
-    }
-
-    .icon {
-      width: 43px;
-      height: 43px;
-      display: grid;
-      place-items: center;
-      color: var(--blue-light);
-      background: #101d35;
-      border: 1px solid #1b3156;
-      border-radius: 8px;
-      font-size: 20px;
-      margin-bottom: 20px;
-    }
-
-    h3 {
-      font-size: 18px;
-      margin-bottom: 9px;
-    }
-
-    .card p {
-      color: var(--muted);
-      font-size: 13px;
+    .eyebrow {
       margin-bottom: 22px;
     }
 
-    .card-link {
-      color: var(--blue-light);
-      font-size: 13px;
-      font-weight: bold;
+    .dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      margin-right: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 14px rgba(120,224,176,.65);
     }
 
-    .about {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 40px;
-      align-items: center;
+    h1 {
+      max-width: 740px;
+      margin-bottom: 22px;
+      font-size: clamp(40px, 6vw, 70px);
+      line-height: 1.04;
+      letter-spacing: -.05em;
     }
 
-    .terminal {
-      background: #080a0f;
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      overflow: hidden;
-      font-family: monospace;
+    .accent {
+      color: var(--blue2);
+    }
+
+    .hero-copy {
+      max-width: 610px;
+      margin-bottom: 28px;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-top: 25px;
+      color: var(--muted);
       font-size: 12px;
     }
 
-    .terminal-top {
+    .console {
+      overflow: hidden;
+      border: 1px solid #26374e;
+      border-radius: var(--radius);
+      background: linear-gradient(145deg, #0e1521, #060a10);
+      box-shadow: 0 24px 80px rgba(0,0,0,.35);
+    }
+
+    .console-head {
+      display: flex;
+      justify-content: space-between;
       padding: 13px 16px;
       border-bottom: 1px solid var(--border);
       color: var(--muted);
+      font: 11px monospace;
     }
 
-    .terminal-body {
-      padding: 22px 18px;
-      color: #b6c1d5;
-      line-height: 2.1;
+    .lights {
+      display: flex;
+      gap: 6px;
+    }
+
+    .lights i {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #42516a;
+    }
+
+    .console-body {
+      padding: 22px;
+      color: #bac7d9;
+      font: 12px/2.1 monospace;
       overflow-wrap: anywhere;
     }
 
-    .terminal .prompt {
-      color: var(--blue-light);
+    .prompt {
+      color: var(--blue2);
     }
 
-    .terminal .ok {
-      color: #7dd3a5;
+    .ok {
+      color: var(--green);
     }
 
-    .youtube-box {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      padding: 32px;
+    .dim {
+      color: #6d7c92;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 7px;
+      height: 13px;
+      background: var(--blue2);
+      animation: blink 1s steps(2) infinite;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    section {
+      padding: 75px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-head {
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: end;
       gap: 25px;
+      margin-bottom: 30px;
     }
 
-    .youtube-box p {
+    .section-kicker {
+      margin-bottom: 9px;
+    }
+
+    .section-head h2,
+    .about h2 {
+      margin-bottom: 12px;
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.15;
+      letter-spacing: -.04em;
+    }
+
+    .section-desc {
+      max-width: 620px;
       color: var(--muted);
       font-size: 14px;
-      max-width: 540px;
-      margin-top: 8px;
     }
 
-    footer {
-      padding: 30px 0;
+    .small-link {
+      color: var(--blue2);
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .tool-card {
+      display: flex;
+      flex-direction: column;
+      min-height: 260px;
+      padding: 24px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: linear-gradient(145deg, #0e1521, #090d14);
+      transition: .2s;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-4px);
+      border-color: #365b91;
+    }
+
+    .tool-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 17px;
+    }
+
+    .tool-icon {
+      display: grid;
+      place-items: center;
+      width: 45px;
+      height: 45px;
+      border: 1px solid rgba(57,132,255,.25);
+      border-radius: 12px;
+      color: var(--blue2);
+      background: rgba(57,132,255,.11);
+      font: 800 17px monospace;
+    }
+
+    .status {
+      padding: 5px 9px;
+      border: 1px solid #2a374b;
+      border-radius: 99px;
+      color: #a7b5c9;
+      font-size: 10px;
+    }
+
+    .status-live {
+      color: var(--green);
+      border-color: rgba(120,224,176,.25);
+    }
+
+    .tool-card h3 {
+      margin-bottom: 8px;
+      font-size: 21px;
+    }
+
+    .tool-card p {
+      margin-bottom: 18px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-bottom: 20px;
+    }
+
+    .chip {
+      padding: 4px 8px;
+      border: 1px solid rgba(57,132,255,.17);
+      border-radius: 6px;
+      color: #b5c9e8;
+      background: rgba(57,132,255,.075);
+      font-size: 10px;
+    }
+
+    .tool-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: auto;
+    }
+
+    .text-link {
+      padding: 7px 0;
+      color: var(--blue2);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .feature-grid,
+    .tutorial-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .feature,
+    .tutorial {
+      padding: 22px;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      background: var(--panel);
+    }
+
+    .feature-symbol,
+    .tutorial .num {
+      margin-bottom: 15px;
+      color: var(--blue2);
+      font: 800 12px monospace;
+    }
+
+    .feature h3,
+    .tutorial h3 {
+      margin-bottom: 8px;
+      font-size: 15px;
+    }
+
+    .feature p,
+    .tutorial p {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .about-copy p {
+      margin: 16px 0 24px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .terminal-lines {
+      padding: 23px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #070b11;
+      font: 12px/2.15 monospace;
+      overflow-wrap: anywhere;
+    }
+
+    .line {
+      display: block;
+    }
+
+    .tutorial {
+      display: flex;
+      flex-direction: column;
+      min-height: 210px;
+    }
+
+    .tutorial a {
+      margin-top: auto;
+      padding-top: 18px;
+      color: var(--blue2);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .video-feature {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(240px, .65fr);
+      align-items: center;
+      gap: 25px;
+      margin-bottom: 28px;
+    }
+
+    .video-frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: #05070b;
+      box-shadow: 0 20px 60px rgba(0,0,0,.28);
+    }
+
+    .video-frame iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .video-copy h3 {
+      margin: 10px 0 12px;
+      font-size: clamp(22px, 3vw, 30px);
+      line-height: 1.15;
+    }
+
+    .video-copy p {
+      margin-bottom: 20px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .youtube-panel {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 25px;
+      padding: 30px;
+      border: 1px solid rgba(57,132,255,.27);
+      border-radius: var(--radius);
+      background: rgba(11,16,25,.9);
+    }
+
+    .youtube-panel h3 {
+      font-size: 23px;
+    }
+
+    .youtube-panel p {
+      max-width: 590px;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .faq-list {
+      display: grid;
+      gap: 10px;
+      max-width: 850px;
+    }
+
+    .faq-list details {
+      padding: 17px 19px;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      background: rgba(11,16,25,.7);
+    }
+
+    .faq-list summary {
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .faq-list details p {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .disclaimer {
+      margin-top: 25px;
+      padding: 15px 17px;
+      border-left: 2px solid var(--blue);
+      color: #aebbd0;
+      background: rgba(57,132,255,.06);
+      font-size: 12px;
+    }
+
+    .footer {
+      padding: 30px 0 35px;
     }
 
     .footer-inner {
@@ -279,296 +591,459 @@
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 16px;
+      gap: 20px;
     }
 
     .copyright {
-      color: var(--muted);
-      font-size: 12px;
+      margin-top: 10px;
+      color: #78879b;
+      font-size: 11px;
     }
 
-    .footer-links {
+    .footlinks {
       display: flex;
+      flex-wrap: wrap;
       gap: 18px;
+      color: #aebbd0;
       font-size: 12px;
-      color: #c3c7d1;
     }
 
-    @media (max-width: 700px) {
-      nav {
-        padding: 17px 0;
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .nav-links {
-        gap: 16px;
-        flex-wrap: wrap;
+    @media (max-width: 800px) {
+      .hero-grid,
+      .about-grid,
+      .video-feature {
+        grid-template-columns: 1fr;
       }
 
       .hero {
-        padding: 75px 0 65px;
+        padding: 65px 0;
       }
 
-      h1 {
-        letter-spacing: -1.3px;
-      }
-
-      .grid {
+      .tools-grid {
         grid-template-columns: 1fr;
       }
 
-      .about {
+      .feature-grid,
+      .tutorial-grid {
         grid-template-columns: 1fr;
-        gap: 25px;
       }
 
-      .youtube-box {
+      .section-head {
         align-items: flex-start;
         flex-direction: column;
-        padding: 24px;
       }
 
-      section {
-        padding: 55px 0;
+      .youtube-panel {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav {
+        padding: 14px 0;
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .navlinks {
+        gap: 12px 16px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
       }
     }
   </style>
 </head>
 
 <body>
+  <header class="topbar">
+    <div class="wrap nav">
+      <a class="brand" href="#inicio">
+        <span class="brandmark">OT/</span>
+        <span class="brand-name">OFFENSIVE <span>TECHNOLOGY</span></span>
+      </a>
 
-  <header>
-    <div class="container">
-      <nav>
-        <a class="logo" href="#inicio">
-          OFFENSIVE <span>TECHNOLOGY</span>
-        </a>
-
-        <div class="nav-links">
-          <a href="#projetos">Projetos</a>
-          <a href="#sobre">Sobre</a>
-          <a href="#tutoriais">Tutoriais</a>
-          <a href="#youtube">YouTube</a>
-        </div>
+      <nav class="navlinks" aria-label="Navegação principal">
+        <a href="#projetos">Projetos</a>
+        <a href="#sobre">Sobre</a>
+        <a href="#tutoriais">Tutoriais</a>
+        <a href="#youtube">Vídeos</a>
+        <a href="#faq">FAQ</a>
+        <a href="https://github.com/Mcsd7" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
       </nav>
     </div>
   </header>
 
   <main>
     <section class="hero" id="inicio">
-      <div class="container">
-        <div class="eyebrow">ANDROID · SECURITY · OPEN SOURCE</div>
+      <div class="wrap hero-grid">
+        <div>
+          <div class="eyebrow"><span class="dot"></span> ANDROID · TERMUX · OPEN SOURCE</div>
 
-        <h1>
-          Tecnologia sem limites.<br>
-          <span class="blue">Conhecimento livre.</span>
-        </h1>
+          <h1>
+            Tecnologia sem limites.<br>
+            <span class="accent">Direto do Android.</span>
+          </h1>
 
-        <p>
-          Explore ferramentas, projetos open source e tutoriais
-          sobre Android, Termux, engenharia reversa e segurança
-          digital. Desenvolvido para quem gosta de ir além.
-        </p>
+          <p class="hero-copy">
+            Projetos, ferramentas e tutoriais de desenvolvimento, engenharia reversa,
+            programação de baixo nível e segurança digital — explorando o potencial do Android.
+          </p>
 
-        <div class="buttons">
-          <a class="btn btn-primary" href="#projetos">
-            Explorar projetos →
-          </a>
-          <a class="btn" href="https://github.com/Mcsd7"
-             target="_blank" rel="noopener noreferrer">
-            GitHub ↗
-          </a>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#projetos">Explorar projetos ↓</a>
+            <a class="btn btn-secondary" href="https://www.youtube.com/@offensivetechnology7" target="_blank" rel="noopener noreferrer">Canal no YouTube ↗</a>
+          </div>
+
+          <div class="hero-meta">
+            <span><b>Android</b> como plataforma</span>
+            <span><b>Open source</b> e aprendizado</span>
+          </div>
+        </div>
+
+        <div class="console">
+          <div class="console-head">
+            <span>offensive-terminal</span>
+            <span class="lights"><i></i><i></i><i></i></span>
+          </div>
+
+          <div class="console-body">
+            <div><span class="prompt">mcsd7@offensive</span>:~$ whoami</div>
+            <div class="ok">Android Developer & Security Enthusiast</div>
+            <div><span class="prompt">mcsd7@offensive</span>:~$ ls projects/</div>
+            <div>ReaDroid/</div>
+            <div>Sysguard-ASM/</div>
+            <div>AITRACE/</div>
+            <div>NetScope/</div>
+            <div><span class="prompt">mcsd7@offensive</span>:~$ echo $MISSION</div>
+            <div class="ok">Learn. Build. Share.</div>
+            <div><span class="prompt">mcsd7@offensive</span>:~$ <span class="cursor"></span></div>
+          </div>
         </div>
       </div>
     </section>
 
     <section id="projetos">
-      <div class="container">
-        <div class="section-label">01 / FERRAMENTAS</div>
-        <h2>Projetos em destaque</h2>
-        <p class="section-desc">
-          Ferramentas e experimentos para explorar o potencial
-          do Android e do software open source.
-        </p>
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">01 / LABORATÓRIO</div>
+            <h2>Projetos em destaque</h2>
+            <p class="section-desc">
+              Ferramentas e experimentos voltados para Android, Termux, programação e diagnóstico.
+            </p>
+          </div>
 
-        <div class="grid">
-          <article class="card">
-            <div class="icon">⌕</div>
+          <a class="small-link" href="https://github.com/Mcsd7?tab=repositories" target="_blank" rel="noopener noreferrer">Todos os repositórios ↗</a>
+        </div>
+
+        <div class="tools-grid">
+          <article class="tool-card">
+            <div class="tool-top">
+              <div class="tool-icon">RD</div>
+              <span class="status status-live">Termux · APK</span>
+            </div>
             <h3>ReaDroid</h3>
-            <p>
-              Toolkit para análise e engenharia reversa de APKs
-              diretamente no Android, utilizando o Termux.
-            </p>
-            <a class="card-link"
-               href="https://github.com/Mcsd7?tab=repositories"
-               target="_blank" rel="noopener noreferrer">
-              Explorar no GitHub →
-            </a>
+            <p>Kit de ferramentas para análise e engenharia reversa de APKs Android diretamente pelo Termux, com foco em uso local e sem depender de IA.</p>
+            <div class="chips">
+              <span class="chip">Android</span>
+              <span class="chip">APK</span>
+              <span class="chip">Reverse Engineering</span>
+            </div>
+            <div class="tool-actions">
+              <a class="btn btn-secondary" href="https://github.com/Mcsd7?tab=repositories" target="_blank" rel="noopener noreferrer">Encontrar projeto ↗</a>
+            </div>
           </article>
 
-          <article class="card">
-            <div class="icon">⌁</div>
-            <h3>NetScope</h3>
-            <p>
-              Projeto dedicado ao diagnóstico de rede e à análise
-              de conexões no ambiente Android.
-            </p>
-            <a class="card-link"
-               href="https://github.com/Mcsd7?tab=repositories"
-               target="_blank" rel="noopener noreferrer">
-              Explorar no GitHub →
-            </a>
-          </article>
-
-          <article class="card">
-            <div class="icon">⌘</div>
+          <article class="tool-card">
+            <div class="tool-top">
+              <div class="tool-icon">SA</div>
+              <span class="status status-live">Assembly · ARM64</span>
+            </div>
             <h3>Sysguard ASM</h3>
-            <p>
-              Ferramenta de sistema desenvolvida em Assembly
-              para arquitetura ARM64 no Android.
-            </p>
-            <a class="card-link"
-               href="https://github.com/Mcsd7/Sysguard-ASM"
-               target="_blank" rel="noopener noreferrer">
-              Acessar repositório →
-            </a>
+            <p>Ferramenta em Assembly para Android com funções de informações do sistema, monitoramento de processos, auditoria de permissões e relatório.</p>
+            <div class="chips">
+              <span class="chip">Assembly</span>
+              <span class="chip">AArch64</span>
+              <span class="chip">Termux</span>
+            </div>
+            <div class="tool-actions">
+              <a class="btn btn-secondary" href="https://github.com/Mcsd7/Sysguard-ASM" target="_blank" rel="noopener noreferrer">Repositório oficial ↗</a>
+            </div>
+          </article>
+
+          <article class="tool-card">
+            <div class="tool-top">
+              <div class="tool-icon">AT</div>
+              <span class="status">Python · Rede</span>
+            </div>
+            <h3>AITRACE</h3>
+            <p>Projeto de diagnóstico de conectividade para Termux/Android, com informações de conexão, testes de latência, perda de pacotes e diagnóstico.</p>
+            <div class="chips">
+              <span class="chip">Python</span>
+              <span class="chip">Latência</span>
+              <span class="chip">Diagnóstico</span>
+            </div>
+            <div class="tool-actions">
+              <a class="btn btn-secondary" href="https://github.com/Mcsd7?tab=repositories" target="_blank" rel="noopener noreferrer">Encontrar projeto ↗</a>
+            </div>
+          </article>
+
+          <article class="tool-card">
+            <div class="tool-top">
+              <div class="tool-icon">NS</div>
+              <span class="status">Projeto</span>
+            </div>
+            <h3>NetScope</h3>
+            <p>Projeto apresentado no portal Offensive Technology. Consulte o GitHub para conferir a versão, as funcionalidades e a documentação disponíveis.</p>
+            <div class="chips">
+              <span class="chip">Android</span>
+              <span class="chip">Open source</span>
+            </div>
+            <div class="tool-actions">
+              <a class="btn btn-secondary" href="https://github.com/Mcsd7?tab=repositories" target="_blank" rel="noopener noreferrer">Ver projetos ↗</a>
+            </div>
           </article>
         </div>
       </div>
     </section>
 
     <section id="sobre">
-      <div class="container about">
-        <div>
-          <div class="section-label">02 / SOBRE</div>
-          <h2>Feito para explorar a tecnologia.</h2>
-          <p class="section-desc">
-            A Offensive Technology compartilha conhecimento
-            prático sobre ferramentas, programação, Android
-            e cibersegurança responsável.
+      <div class="wrap about-grid">
+        <div class="about-copy">
+          <div class="section-kicker">02 / FILOSOFIA</div>
+          <h2>Aprender fazendo.<br><span class="accent">Compartilhar sempre.</span></h2>
+          <p>
+            Offensive Technology é um espaço dedicado a ferramentas e experiências práticas
+            no Android, desenvolvimento de baixo nível, Termux e segurança digital.
+            A ideia é tornar o aprendizado técnico acessível, inclusive para quem programa
+            diretamente pelo celular.
           </p>
-          <a class="btn" href="https://github.com/Mcsd7"
-             target="_blank" rel="noopener noreferrer">
-            Conheça os projetos →
-          </a>
+          <a class="btn btn-secondary" href="https://github.com/Mcsd7" target="_blank" rel="noopener noreferrer">Conheça o GitHub ↗</a>
         </div>
 
-        <div class="terminal">
-          <div class="terminal-top">offensive@android: ~</div>
-          <div class="terminal-body">
-            <div><span class="prompt">$</span> whoami</div>
-            <div>Offensive Technology</div>
-            <div><span class="prompt">$</span> cat mission.txt</div>
-            <div>Aprender. Desenvolver. Compartilhar.</div>
-            <div><span class="prompt">$</span> status</div>
-            <div class="ok">● Open source &amp; learning</div>
-            <div><span class="prompt">$</span> <span class="blue">_</span></div>
-          </div>
+        <div class="terminal-lines" aria-label="Resumo da missão">
+          <span class="line"><span class="prompt">$</span> cat values.txt</span>
+          <span class="line">Curiosidade, código e experimentação.</span>
+          <span class="line"><span class="prompt">$</span> echo $PLATFORM</span>
+          <span class="line ok">Android + Termux</span>
+          <span class="line"><span class="prompt">$</span> echo $MISSION</span>
+          <span class="line">Aprender. Desenvolver. Compartilhar.</span>
+          <span class="line"><span class="prompt">$</span> <span class="ok">status: building in public</span></span>
         </div>
       </div>
     </section>
 
     <section id="tutoriais">
-      <div class="container">
-        <div class="section-label">03 / APRENDIZADO</div>
-        <h2>Tutoriais e documentação</h2>
-        <p class="section-desc">
-          Aprenda na prática com demonstrações, comandos,
-          projetos e guias publicados no canal.
-        </p>
-
-        <div class="grid">
-          <article class="card">
-            <div class="icon">$_</div>
-            <h3>Termux &amp; Android</h3>
-            <p>
-              Instalação de ferramentas, configuração de ambiente
-              e programação diretamente pelo celular.
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">03 / APRENDIZADO</div>
+            <h2>Aprenda na prática</h2>
+            <p class="section-desc">
+              Tutoriais com demonstrações, instalação de ferramentas e desenvolvimento diretamente no Android.
             </p>
-            <a class="card-link"
-               href="https://www.youtube.com/@offensivetechnology7"
-               target="_blank" rel="noopener noreferrer">
-              Ver tutoriais →
-            </a>
+          </div>
+          <a class="small-link" href="https://www.youtube.com/@offensivetechnology7" target="_blank" rel="noopener noreferrer">Ver canal completo ↗</a>
+        </div>
+
+        <div class="tutorial-grid">
+          <article class="tutorial">
+            <div class="num">GUIA 001 / TERMUX</div>
+            <h3>Configure seu ambiente Android</h3>
+            <p>Explore tutoriais sobre Termux, pacotes, ferramentas e personalização do terminal.</p>
+            <a href="https://www.youtube.com/@offensivetechnology7" target="_blank" rel="noopener noreferrer">Assistir tutoriais ↗</a>
           </article>
 
-          <article class="card">
-            <div class="icon">⌘</div>
-            <h3>Programação</h3>
-            <p>
-              Explore Python, Assembly e desenvolvimento de
-              ferramentas para dispositivos Android.
-            </p>
-            <a class="card-link"
-               href="https://github.com/Mcsd7?tab=repositories"
-               target="_blank" rel="noopener noreferrer">
-              Ver projetos →
-            </a>
+          <article class="tutorial">
+            <div class="num">GUIA 002 / LOW LEVEL</div>
+            <h3>Assembly no Android</h3>
+            <p>Conheça o Sysguard ASM e veja como a programação de baixo nível pode ser explorada no celular.</p>
+            <a href="https://github.com/Mcsd7/Sysguard-ASM" target="_blank" rel="noopener noreferrer">Abrir código-fonte ↗</a>
           </article>
 
-          <article class="card">
-            <div class="icon">◎</div>
-            <h3>Segurança digital</h3>
-            <p>
-              Conheça ferramentas de análise e práticas de
-              segurança em ambientes autorizados.
-            </p>
-            <a class="card-link"
-               href="https://www.youtube.com/@offensivetechnology7"
-               target="_blank" rel="noopener noreferrer">
-              Aprender no YouTube →
-            </a>
+          <article class="tutorial">
+            <div class="num">GUIA 003 / ENGENHARIA REVERSA</div>
+            <h3>Análise de APKs</h3>
+            <p>Explore o desenvolvimento de ferramentas para inspecionar e analisar aplicativos Android.</p>
+            <a href="https://github.com/Mcsd7?tab=repositories" target="_blank" rel="noopener noreferrer">Explorar projetos ↗</a>
           </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="instalacao">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">04 / COMEÇAR</div>
+            <h2>Como instalar com segurança</h2>
+            <p class="section-desc">
+              Os comandos variam por projeto e podem mudar entre versões. Use sempre as instruções do repositório oficial.
+            </p>
+          </div>
+        </div>
+
+        <div class="feature-grid">
+          <article class="feature">
+            <div class="feature-symbol">01 /</div>
+            <h3>Abra o repositório</h3>
+            <p>Leia o README, os requisitos e as versões do Android e do Termux suportadas.</p>
+          </article>
+
+          <article class="feature">
+            <div class="feature-symbol">02 /</div>
+            <h3>Confira os comandos</h3>
+            <p>Use os comandos da documentação oficial e evite scripts de fontes desconhecidas.</p>
+          </article>
+
+          <article class="feature">
+            <div class="feature-symbol">03 /</div>
+            <h3>Teste seu ambiente</h3>
+            <p>Verifique as dependências e a compatibilidade antes de relatar um problema.</p>
+          </article>
+        </div>
+
+        <div class="disclaimer">
+          <strong>Nota:</strong> os links de ReaDroid, AITRACE e NetScope levam à lista de repositórios do desenvolvedor porque seus endereços individuais precisam ser confirmados.
         </div>
       </div>
     </section>
 
     <section id="youtube">
-      <div class="container">
-        <div class="section-label">04 / CONTEÚDO</div>
-
-        <div class="youtube-box">
+      <div class="wrap">
+        <div class="section-head">
           <div>
-            <h2>Offensive <span class="blue">Technology</span></h2>
-            <p>
-              Vídeos, demonstrações e tutoriais de tecnologia
-              para aprender mais sobre Android, Termux e segurança.
-              Inscreva-se no canal e acompanhe os próximos projetos.
+            <div class="section-kicker">05 / CONTEÚDO EM VÍDEO</div>
+            <h2>Assista no canal</h2>
+            <p class="section-desc">
+              Confira os vídeos da Offensive Technology diretamente nesta página.
             </p>
           </div>
+        </div>
 
-          <a class="btn btn-primary"
-             href="https://www.youtube.com/@offensivetechnology7"
-             target="_blank" rel="noopener noreferrer">
-            Visitar canal ↗
-          </a>
+        <div class="video-feature">
+          <div class="video-frame">
+            <iframe
+              src="https://www.youtube-nocookie.com/embed/vDmRKA1k2Aw"
+              title="Vídeo da Offensive Technology no YouTube"
+              loading="lazy"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen>
+            </iframe>
+          </div>
+
+          <div class="video-copy">
+            <div class="section-kicker">DESTAQUE DO CANAL</div>
+            <h3>Offensive Technology</h3>
+            <p>
+              Tutoriais de Termux, projetos para Android, ferramentas de segurança
+              e programação diretamente pelo celular.
+            </p>
+            <a class="btn btn-primary" href="https://youtu.be/vDmRKA1k2Aw" target="_blank" rel="noopener noreferrer">Assistir no YouTube ↗</a>
+          </div>
+        </div>
+
+        <div class="video-feature">
+          <div class="video-frame">
+            <iframe
+              src="https://www.youtube-nocookie.com/embed/ztB9ZoR_uFM"
+              title="Assembly no Android — Offensive Technology"
+              loading="lazy"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen>
+            </iframe>
+          </div>
+
+          <div class="video-copy">
+            <div class="section-kicker">PROGRAMAÇÃO DE BAIXO NÍVEL</div>
+            <h3>Assembly no Android</h3>
+            <p>
+              Veja o projeto de Assembly no Android e conheça o Sysguard ASM,
+              desenvolvido para ARM64 diretamente no ambiente Android.
+            </p>
+            <a class="btn btn-primary" href="https://youtu.be/ztB9ZoR_uFM" target="_blank" rel="noopener noreferrer">Assistir vídeo de Assembly ↗</a>
+          </div>
+        </div>
+
+        <div class="youtube-panel">
+          <div>
+            <div class="section-kicker">MAIS CONTEÚDO</div>
+            <h3>Continue explorando</h3>
+            <p>Acompanhe os próximos projetos, demonstrações e tutoriais publicados no canal.</p>
+          </div>
+          <a class="btn btn-primary" href="https://www.youtube.com/@offensivetechnology7" target="_blank" rel="noopener noreferrer">Visitar canal ↗</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">06 / PERGUNTAS</div>
+            <h2>Dúvidas frequentes</h2>
+          </div>
+        </div>
+
+        <div class="faq-list">
+          <details>
+            <summary>Preciso de um computador para usar os projetos?</summary>
+            <p>Os projetos indicados para Android e Termux podem ser usados no celular, mas cada ferramenta possui requisitos próprios. Confira a documentação antes de instalar.</p>
+          </details>
+
+          <details>
+            <summary>Preciso de root no Android?</summary>
+            <p>O ReaDroid foi desenvolvido para análise de APKs sem exigir root. Para outras ferramentas, confira os requisitos e as limitações descritos em cada projeto.</p>
+          </details>
+
+          <details>
+            <summary>Onde encontro o código-fonte?</summary>
+            <p>Acesse os links dos projetos ou visite o perfil do desenvolvedor no GitHub para ver os repositórios disponíveis.</p>
+          </details>
+
+          <details>
+            <summary>Posso usar ferramentas de segurança em qualquer sistema?</summary>
+            <p>Use ferramentas apenas em dispositivos, aplicativos e redes que sejam seus ou para os quais você tenha autorização explícita. Respeite a legislação e a privacidade de terceiros.</p>
+          </details>
         </div>
       </div>
     </section>
   </main>
 
-  <footer>
-    <div class="container footer-inner">
-      <div class="copyright">
-        © <span id="year">2026</span> Offensive Technology.
-        Conhecimento e tecnologia.
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <div>
+        <a class="brand" href="#inicio">
+          <span class="brandmark">OT/</span>
+          <span class="brand-name">OFFENSIVE <span>TECHNOLOGY</span></span>
+        </a>
+        <div class="copyright">
+          © <span id="year">2026</span> Offensive Technology. Feito para aprender e compartilhar.
+        </div>
       </div>
 
-      <div class="footer-links">
-        <a href="https://github.com/Mcsd7"
-           target="_blank" rel="noopener noreferrer">GitHub</a>
-        <a href="https://www.youtube.com/@offensivetechnology7"
-           target="_blank" rel="noopener noreferrer">YouTube</a>
+      <div class="footlinks">
+        <a href="https://github.com/Mcsd7" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+        <a href="https://www.youtube.com/@offensivetechnology7" target="_blank" rel="noopener noreferrer">YouTube ↗</a>
+        <a href="#inicio">Voltar ao topo ↑</a>
       </div>
     </div>
   </footer>
 
   <script>
-    document.getElementById("year").textContent =
-      new Date().getFullYear();
+    document.getElementById("year").textContent = new Date().getFullYear();
   </script>
-
 </body>
 </html>
-

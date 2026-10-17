@@ -1,1 +1,574 @@
 
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#050505">
+  <meta name="description" content="Offensive Technology: ferramentas Android, Termux, engenharia reversa, Assembly e cibersegurança. Projetos open source e tutoriais.">
+  <title>Offensive Technology | Android & Security</title>
+
+  <style>
+    :root {
+      --bg: #050505;
+      --panel: #0c0c0f;
+      --blue: #3984ff;
+      --blue-light: #80b2ff;
+      --text: #f4f6fb;
+      --muted: #9298a6;
+      --border: #20232c;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(1080px, 90%);
+      margin: auto;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      background: rgba(5, 5, 5, .96);
+    }
+
+    nav {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .logo {
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -.5px;
+    }
+
+    .logo span,
+    .blue {
+      color: var(--blue);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 22px;
+      font-size: 13px;
+      color: #c3c7d1;
+    }
+
+    .nav-links a:hover,
+    .footer-links a:hover {
+      color: var(--blue-light);
+    }
+
+    .hero {
+      padding: 100px 0 90px;
+      border-bottom: 1px solid var(--border);
+      background:
+        radial-gradient(ellipse at 50% 0%,
+        rgba(35, 94, 220, .13), transparent 65%);
+    }
+
+    .eyebrow {
+      color: var(--blue-light);
+      font-size: 12px;
+      letter-spacing: 2px;
+      font-weight: bold;
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      font-size: clamp(38px, 7vw, 66px);
+      line-height: 1.08;
+      letter-spacing: -2px;
+      max-width: 800px;
+      margin-bottom: 24px;
+    }
+
+    .hero p {
+      max-width: 610px;
+      color: var(--muted);
+      font-size: 16px;
+      margin-bottom: 30px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 19px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: bold;
+      transition: .2s;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: white;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      border-color: var(--blue);
+    }
+
+    section {
+      padding: 72px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-label {
+      color: var(--blue);
+      font-size: 11px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+    }
+
+    h2 {
+      font-size: clamp(26px, 4vw, 34px);
+      letter-spacing: -.8px;
+      margin-bottom: 12px;
+    }
+
+    .section-desc {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 30px;
+      max-width: 580px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      padding: 25px;
+      border-radius: 9px;
+      transition: border-color .2s, transform .2s;
+    }
+
+    .card:hover {
+      border-color: #315da8;
+      transform: translateY(-3px);
+    }
+
+    .icon {
+      width: 43px;
+      height: 43px;
+      display: grid;
+      place-items: center;
+      color: var(--blue-light);
+      background: #101d35;
+      border: 1px solid #1b3156;
+      border-radius: 8px;
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+
+    h3 {
+      font-size: 18px;
+      margin-bottom: 9px;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 22px;
+    }
+
+    .card-link {
+      color: var(--blue-light);
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .about {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .terminal {
+      background: #080a0f;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      overflow: hidden;
+      font-family: monospace;
+      font-size: 12px;
+    }
+
+    .terminal-top {
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .terminal-body {
+      padding: 22px 18px;
+      color: #b6c1d5;
+      line-height: 2.1;
+      overflow-wrap: anywhere;
+    }
+
+    .terminal .prompt {
+      color: var(--blue-light);
+    }
+
+    .terminal .ok {
+      color: #7dd3a5;
+    }
+
+    .youtube-box {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 25px;
+    }
+
+    .youtube-box p {
+      color: var(--muted);
+      font-size: 14px;
+      max-width: 540px;
+      margin-top: 8px;
+    }
+
+    footer {
+      padding: 30px 0;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .copyright {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 18px;
+      font-size: 12px;
+      color: #c3c7d1;
+    }
+
+    @media (max-width: 700px) {
+      nav {
+        padding: 17px 0;
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav-links {
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      .hero {
+        padding: 75px 0 65px;
+      }
+
+      h1 {
+        letter-spacing: -1.3px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .about {
+        grid-template-columns: 1fr;
+        gap: 25px;
+      }
+
+      .youtube-box {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 24px;
+      }
+
+      section {
+        padding: 55px 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="#inicio">
+          OFFENSIVE <span>TECHNOLOGY</span>
+        </a>
+
+        <div class="nav-links">
+          <a href="#projetos">Projetos</a>
+          <a href="#sobre">Sobre</a>
+          <a href="#tutoriais">Tutoriais</a>
+          <a href="#youtube">YouTube</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="inicio">
+      <div class="container">
+        <div class="eyebrow">ANDROID · SECURITY · OPEN SOURCE</div>
+
+        <h1>
+          Tecnologia sem limites.<br>
+          <span class="blue">Conhecimento livre.</span>
+        </h1>
+
+        <p>
+          Explore ferramentas, projetos open source e tutoriais
+          sobre Android, Termux, engenharia reversa e segurança
+          digital. Desenvolvido para quem gosta de ir além.
+        </p>
+
+        <div class="buttons">
+          <a class="btn btn-primary" href="#projetos">
+            Explorar projetos →
+          </a>
+          <a class="btn" href="https://github.com/Mcsd7"
+             target="_blank" rel="noopener noreferrer">
+            GitHub ↗
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="projetos">
+      <div class="container">
+        <div class="section-label">01 / FERRAMENTAS</div>
+        <h2>Projetos em destaque</h2>
+        <p class="section-desc">
+          Ferramentas e experimentos para explorar o potencial
+          do Android e do software open source.
+        </p>
+
+        <div class="grid">
+          <article class="card">
+            <div class="icon">⌕</div>
+            <h3>ReaDroid</h3>
+            <p>
+              Toolkit para análise e engenharia reversa de APKs
+              diretamente no Android, utilizando o Termux.
+            </p>
+            <a class="card-link"
+               href="https://github.com/Mcsd7?tab=repositories"
+               target="_blank" rel="noopener noreferrer">
+              Explorar no GitHub →
+            </a>
+          </article>
+
+          <article class="card">
+            <div class="icon">⌁</div>
+            <h3>NetScope</h3>
+            <p>
+              Projeto dedicado ao diagnóstico de rede e à análise
+              de conexões no ambiente Android.
+            </p>
+            <a class="card-link"
+               href="https://github.com/Mcsd7?tab=repositories"
+               target="_blank" rel="noopener noreferrer">
+              Explorar no GitHub →
+            </a>
+          </article>
+
+          <article class="card">
+            <div class="icon">⌘</div>
+            <h3>Sysguard ASM</h3>
+            <p>
+              Ferramenta de sistema desenvolvida em Assembly
+              para arquitetura ARM64 no Android.
+            </p>
+            <a class="card-link"
+               href="https://github.com/Mcsd7/Sysguard-ASM"
+               target="_blank" rel="noopener noreferrer">
+              Acessar repositório →
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="sobre">
+      <div class="container about">
+        <div>
+          <div class="section-label">02 / SOBRE</div>
+          <h2>Feito para explorar a tecnologia.</h2>
+          <p class="section-desc">
+            A Offensive Technology compartilha conhecimento
+            prático sobre ferramentas, programação, Android
+            e cibersegurança responsável.
+          </p>
+          <a class="btn" href="https://github.com/Mcsd7"
+             target="_blank" rel="noopener noreferrer">
+            Conheça os projetos →
+          </a>
+        </div>
+
+        <div class="terminal">
+          <div class="terminal-top">offensive@android: ~</div>
+          <div class="terminal-body">
+            <div><span class="prompt">$</span> whoami</div>
+            <div>Offensive Technology</div>
+            <div><span class="prompt">$</span> cat mission.txt</div>
+            <div>Aprender. Desenvolver. Compartilhar.</div>
+            <div><span class="prompt">$</span> status</div>
+            <div class="ok">● Open source &amp; learning</div>
+            <div><span class="prompt">$</span> <span class="blue">_</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tutoriais">
+      <div class="container">
+        <div class="section-label">03 / APRENDIZADO</div>
+        <h2>Tutoriais e documentação</h2>
+        <p class="section-desc">
+          Aprenda na prática com demonstrações, comandos,
+          projetos e guias publicados no canal.
+        </p>
+
+        <div class="grid">
+          <article class="card">
+            <div class="icon">$_</div>
+            <h3>Termux &amp; Android</h3>
+            <p>
+              Instalação de ferramentas, configuração de ambiente
+              e programação diretamente pelo celular.
+            </p>
+            <a class="card-link"
+               href="https://www.youtube.com/@offensivetechnology7"
+               target="_blank" rel="noopener noreferrer">
+              Ver tutoriais →
+            </a>
+          </article>
+
+          <article class="card">
+            <div class="icon">⌘</div>
+            <h3>Programação</h3>
+            <p>
+              Explore Python, Assembly e desenvolvimento de
+              ferramentas para dispositivos Android.
+            </p>
+            <a class="card-link"
+               href="https://github.com/Mcsd7?tab=repositories"
+               target="_blank" rel="noopener noreferrer">
+              Ver projetos →
+            </a>
+          </article>
+
+          <article class="card">
+            <div class="icon">◎</div>
+            <h3>Segurança digital</h3>
+            <p>
+              Conheça ferramentas de análise e práticas de
+              segurança em ambientes autorizados.
+            </p>
+            <a class="card-link"
+               href="https://www.youtube.com/@offensivetechnology7"
+               target="_blank" rel="noopener noreferrer">
+              Aprender no YouTube →
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="youtube">
+      <div class="container">
+        <div class="section-label">04 / CONTEÚDO</div>
+
+        <div class="youtube-box">
+          <div>
+            <h2>Offensive <span class="blue">Technology</span></h2>
+            <p>
+              Vídeos, demonstrações e tutoriais de tecnologia
+              para aprender mais sobre Android, Termux e segurança.
+              Inscreva-se no canal e acompanhe os próximos projetos.
+            </p>
+          </div>
+
+          <a class="btn btn-primary"
+             href="https://www.youtube.com/@offensivetechnology7"
+             target="_blank" rel="noopener noreferrer">
+            Visitar canal ↗
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <div class="copyright">
+        © <span id="year">2026</span> Offensive Technology.
+        Conhecimento e tecnologia.
+      </div>
+
+      <div class="footer-links">
+        <a href="https://github.com/Mcsd7"
+           target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.youtube.com/@offensivetechnology7"
+           target="_blank" rel="noopener noreferrer">YouTube</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+  </script>
+
+</body>
+</html>
+
